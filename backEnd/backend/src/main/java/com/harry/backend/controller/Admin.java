@@ -1,6 +1,7 @@
 package com.harry.backend.controller;
 
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.harry.backend.models.Category;
 import com.harry.backend.service.CategoryService;
@@ -13,6 +14,7 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 public class Admin {
@@ -27,9 +29,14 @@ public class Admin {
     }
 
      @PostMapping("/savecategory")
-    public ResponseEntity<?>saveCategory(@RequestBody Category category) {
-        Boolean existsCategory = categoryService.existsCategory(category.getName());
+    public ResponseEntity<String>saveCategory(@RequestBody Category category,@RequestParam("file") MultipartFile file) {
 
+        String imageName = file!=null ? file.getOriginalFilename():"default.jpg";
+
+        category.setImageName(imageName);
+        
+        Boolean existsCategory = categoryService.existsCategory(category.getName());
+        
         if (existsCategory) {
 
            return ResponseEntity.accepted().body("Category Name Already exist");
