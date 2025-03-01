@@ -5,11 +5,10 @@ import org.springframework.web.bind.annotation.RestController;
 import com.harry.backend.models.Category;
 import com.harry.backend.service.CategoryService;
 
-import jakarta.servlet.http.HttpSession;
-
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,22 +27,22 @@ public class Admin {
     }
 
      @PostMapping("/savecategory")
-    public Category saveCategory(@RequestBody Category category, HttpSession session) {
+    public ResponseEntity<?>saveCategory(@RequestBody Category category) {
         Boolean existsCategory = categoryService.existsCategory(category.getName());
 
         if (existsCategory) {
-            session.setAttribute("errorMessage", "Category name already taken.");
+
+           return ResponseEntity.accepted().body("Category Name Already exist");
         } else {
             Category saveCategory = categoryService.saveCategory(category);
             if (ObjectUtils.isEmpty(saveCategory)) {
-                session.setAttribute("errorMessage", "Not saved. Internal server error");
+                return ResponseEntity.internalServerError().body("Error in save category");
             } else {
-                session.setAttribute("successMessage", "Saved successfully");
+                return ResponseEntity.ok("Saved Successfully");
             }
 
         }
 
-        return saveCategory(category, session);
     }  
 
 }
