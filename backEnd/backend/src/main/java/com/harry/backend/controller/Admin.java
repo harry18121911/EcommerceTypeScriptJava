@@ -22,6 +22,7 @@ public class Admin {
     @Autowired
     private CategoryService categoryService;
 
+
     @GetMapping("/category")
     public List<Category> getAllCategory() {
         List<Category> categoryList = categoryService.getAllCategory();
@@ -32,9 +33,10 @@ public class Admin {
     public ResponseEntity<String>saveCategory(@ModelAttribute Category category,@RequestParam("file") MultipartFile file) {
 
         String imageName = file !=null ? file.getOriginalFilename():"default.jpg";
-        
+
 
         category.setImageName(imageName);
+
         
         Boolean existsCategory = categoryService.existsCategory(category.getName());
         
@@ -46,7 +48,8 @@ public class Admin {
             if (ObjectUtils.isEmpty(saveCategory)) {
                 return ResponseEntity.internalServerError().body("Error in save category");
             } else {
-                return ResponseEntity.ok("Saved Successfully");
+                return ResponseEntity.ok("Saved Successfully ");
+                
             }
 
         }
