@@ -12,8 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
@@ -29,9 +29,10 @@ public class Admin {
     }
 
      @PostMapping("/savecategory")
-    public ResponseEntity<String>saveCategory(@RequestBody Category category,@RequestParam("file") MultipartFile file) {
+    public ResponseEntity<String>saveCategory(@ModelAttribute Category category,@RequestParam("file") MultipartFile file) {
 
-        String imageName = file!=null ? file.getOriginalFilename():"default.jpg";
+        String imageName = file !=null ? file.getOriginalFilename():"default.jpg";
+        
 
         category.setImageName(imageName);
         
