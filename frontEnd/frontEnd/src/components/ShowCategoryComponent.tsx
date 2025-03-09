@@ -37,7 +37,6 @@ const ShowCategoryComponent = () => {
                 <td>{categories.id}</td>
                 <td>{categories.name}</td>
                 <td>{categories.imageName}</td>
-                <td>{categories.isActive.toString()}</td>
             </tr>
 
         )))}
