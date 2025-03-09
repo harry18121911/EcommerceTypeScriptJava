@@ -9,8 +9,6 @@ const CategoryComponent = () => {
 
   const [name, setName] = useState("");
   const [file, setFile] = useState<File>(defaultFile);
-  const [image, setImage] = useState<ImageData>();
-  const [imageString, SetImageString] = useState("");
   const [isActive, setIsactive] = useState(false);
 
   const navigate = useNavigate();
@@ -25,6 +23,7 @@ const CategoryComponent = () => {
     const formData= new FormData;
     formData.append("name",name);
     formData.append("file",file); 
+    formData.append("isActive",isActive.toString());
     axios.post("http://localhost:8080/savecategory", formData, {
       headers: {
         'Content-Type': 'multipart/form-data' 

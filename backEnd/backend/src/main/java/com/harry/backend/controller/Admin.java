@@ -33,11 +33,14 @@ public class Admin {
 
     @PostMapping("/savecategory")
     public ResponseEntity<String> saveCategory(@ModelAttribute Category category,
-            @RequestParam("file") MultipartFile file){
+            @RequestParam("file") MultipartFile file, @RequestParam("isActive") String isActive){
 
         String imageName = file != null ? file.getOriginalFilename() : "default.jpg";
+        Boolean isActiveParse= isActive.contains("true") ? true :false ;
 
         category.setImageName(imageName);
+
+        category.setIsActive(isActiveParse);
 
         Boolean existsCategory = categoryService.existsCategory(category.getName());
 
