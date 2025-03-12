@@ -6,10 +6,16 @@ import org.springframework.web.multipart.MultipartFile;
 import com.harry.backend.models.Category;
 import com.harry.backend.service.CategoryService;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -33,10 +39,10 @@ public class Admin {
 
     @PostMapping("/savecategory")
     public ResponseEntity<String> saveCategory(@ModelAttribute Category category,
-            @RequestParam("file") MultipartFile file, @RequestParam("isActive") String isActive){
+            @RequestParam("file") MultipartFile file, @RequestParam("isActive") String isActive) throws IOException {
 
         String imageName = file != null ? file.getOriginalFilename() : "default.jpg";
-        Boolean isActiveParse= isActive.contains("true") ? true :false ;
+        Boolean isActiveParse = isActive.contains("true") ? true : false;
 
         category.setImageName(imageName);
 
@@ -50,21 +56,24 @@ public class Admin {
         } else {
             Category saveCategory = categoryService.saveCategory(category);
             if (ObjectUtils.isEmpty(saveCategory)) {
-                
 
                 return ResponseEntity.internalServerError().body("Error in save category");
             } else {
 
                 /* Server side image save just in case. */
-                
-                /* File saveFile =new ClassPathResource("static/img").getFile();
-                Path path = Paths.get(saveFile.getAbsolutePath()+File.separator+"category_img"+File.separator+file.getOriginalFilename());
+                if (file == null) {
+                    return ResponseEntity.internalServerError().body("file is null.");
+                } else {
 
-                System.out.println(path);
+                    File saveFile = new ClassPathResource("static/img").getFile();
+                    Path path = Paths.get(saveFile.getAbsolutePath() + File.separator + "category_img" + File.separator
+                            + file.getOriginalFilename());
 
-                Files.copy(file.getInputStream(), path ,StandardCopyOption.REPLACE_EXISTING); */
-                return ResponseEntity.ok("Saved Successfully ");
+                    System.out.println(path);
 
+                    Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+                    return ResponseEntity.ok("Saved Successfully ");
+                }
             }
 
         }

@@ -1,7 +1,6 @@
 import { ChangeEvent, FormEvent, SyntheticEvent, useState, } from 'react'
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import fs from "fs";
 
 const CategoryComponent = () => {
 
