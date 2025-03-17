@@ -14,6 +14,7 @@ const ShowCategoryComponent = () => {
     const navigate = useNavigate();
 
     const [category, setCategory] = useState<Category[]>([])
+    const [image, setImage] = useState<String>("");
 
 
     useEffect(() => {
@@ -28,6 +29,8 @@ const ShowCategoryComponent = () => {
         })
         navigate("/category");
     }
+
+    
 
 
     return (
@@ -47,7 +50,10 @@ const ShowCategoryComponent = () => {
                         <tr key={categories.id}>
                             <td>{categories.id}</td>
                             <td>{categories.name}</td>
+                            <td><img src={`http://localhost:8080/${categories.imageName}`} alt=""></img></td>
+                            <td><img src={`/public/vite.svg`} alt=""></img></td>
                             <td>{categories.imageName}</td>
+                            
                         </tr>
 
                     )))}
