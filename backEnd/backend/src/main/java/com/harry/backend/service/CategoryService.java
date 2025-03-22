@@ -1,6 +1,5 @@
 package com.harry.backend.service;
 
-import java.io.IOException;
 import java.util.List;
 
 import com.harry.backend.models.Category;
@@ -12,7 +11,7 @@ public interface CategoryService {
 
     public Boolean existsCategory(String name);
 
-    public String readFileFromResources(String filename)throws IOException;
+    public Boolean deleteCategory(int id);
 
 
 }

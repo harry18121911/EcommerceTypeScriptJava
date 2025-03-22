@@ -1,6 +1,5 @@
 import axios from 'axios'
 import { useState, useEffect, Key } from 'react'
-import { useNavigate } from 'react-router-dom'
 
 const ShowCategoryComponent = () => {
 
@@ -11,15 +10,13 @@ const ShowCategoryComponent = () => {
         isActive: Boolean
     }
 
-    const navigate = useNavigate();
 
     const [category, setCategory] = useState<Category[]>([])
-    const [image, setImage] = useState<String>("");
 
 
     useEffect(() => {
         getAllCategories()
-    }, [])
+    }, [category])
 
     function getAllCategories() {
         axios.get("http://localhost:8080/category").then((response) => {
@@ -27,7 +24,10 @@ const ShowCategoryComponent = () => {
         }).catch(error => {
             console.error(error);
         })
-        navigate("/category");
+    }
+
+    function handleDelete(id:Key ){
+        axios.delete(`http://localhost:8080/deletecategory/${id}`);
     }
 
     
@@ -53,6 +53,8 @@ const ShowCategoryComponent = () => {
                             <td><img src={`http://localhost:8080/${categories.imageName}`} alt=""></img></td>
                             <td><img src={`/public/vite.svg`} alt=""></img></td>
                             <td>{categories.imageName}</td>
+                            <td><button>Edit</button></td>
+                            <td><button onClick={()=>handleDelete(categories.id)}>Delete</button></td>
                             
                         </tr>
 
