@@ -25,9 +25,11 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
 
 @CrossOrigin("*")
 @RestController
@@ -42,6 +44,13 @@ public class Admin {
 
         return ResponseEntity.ok(categoryList);
     }
+
+    @GetMapping("/categorybyid/{id}")
+    public ResponseEntity<Category>categoryById(@PathVariable int id) {
+        Category category = categoryService.getCategoryById(id);
+        return ResponseEntity.ok(category);
+    }
+    
 
     @GetMapping("/{imageName}")
     public ResponseEntity<Resource> getImage(@PathVariable String imageName) throws Exception {
@@ -104,4 +113,16 @@ public class Admin {
         }
     }
 
+    @PatchMapping("/patchcategory/{id}")
+    public ResponseEntity<String >patchCategory(@PathVariable int id, @ModelAttribute Category category) {
+
+        Category patchCategory = categoryService.patchCategory(category);
+        
+        if(ObjectUtils.isEmpty(patchCategory)){
+            return ResponseEntity.internalServerError().body("Error in Patching");
+        }    
+    
+        return ResponseEntity.ok("Category patched successfully.");
+    }
+    
 }

@@ -10,13 +10,11 @@ const ShowCategoryComponent = () => {
         isActive: Boolean
     }
 
-
     const [category, setCategory] = useState<Category[]>([])
-
 
     useEffect(() => {
         getAllCategories()
-    }, [category])
+    },[]) 
 
     function getAllCategories() {
         axios.get("http://localhost:8080/category").then((response) => {
@@ -26,8 +24,17 @@ const ShowCategoryComponent = () => {
         })
     }
 
-    function handleDelete(id:Key ){
-        axios.delete(`http://localhost:8080/deletecategory/${id}`);
+    const handleDelete=async(id:Key )=>{
+        try{
+        const render = await axios.delete(`http://localhost:8080/deletecategory/${id}`);
+        if(render){
+        getAllCategories();
+        }
+        }catch(error){
+            console.error(error);
+        };
+        
+        
     }
 
     
@@ -35,6 +42,7 @@ const ShowCategoryComponent = () => {
 
     return (
         <div>
+            <div>Category Count {category.length}</div>
             <table>
                 <thead>
 
@@ -47,6 +55,7 @@ const ShowCategoryComponent = () => {
                 <tbody>
 
                     {category.map((categories => (
+                        
                         <tr key={categories.id}>
                             <td>{categories.id}</td>
                             <td>{categories.name}</td>

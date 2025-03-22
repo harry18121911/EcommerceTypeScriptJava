@@ -27,6 +27,11 @@ public class CategoryServiceImpl implements CategoryService{
     }
 
     @Override
+    public Category getCategoryById(int id) {
+        return categoryRepository.findById(id).orElse(null);
+    }
+
+    @Override
     public Boolean existsCategory(String name) {
         return categoryRepository.existsByName(name);
     }
@@ -42,5 +47,30 @@ public class CategoryServiceImpl implements CategoryService{
         }
         return false;
     }
+
+    @Override
+    public Category patchCategory(Category category) {
+
+        Category oldCategory =categoryRepository.findById(category.getId()).orElse(null);
+
+        if(!ObjectUtils.isEmpty(oldCategory)){
+            if(category.getName()!=null){
+                oldCategory.setName(category.getName());
+            }
+            if(category.getImageName()!=null){
+                oldCategory.setImageName(category.getImageName());
+            }
+            if(category.getIsActive()!=null){
+                oldCategory.setIsActive(category.getIsActive());
+            }
+        }
+
+        Category newCategory = categoryRepository.save(oldCategory);
+
+        return newCategory;
+
+    }
+
+    
 
 }
