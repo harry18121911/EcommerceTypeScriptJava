@@ -58,13 +58,22 @@ public class Admin {
     }
     
 
-    @GetMapping("/{imageName}")
-    public ResponseEntity<Resource> getImage(@PathVariable String imageName) throws Exception {
+    @GetMapping("/category/{imageName}")
+    public ResponseEntity<Resource> getImageForCategory(@PathVariable String imageName) throws Exception {
 
-        Path path = Paths.get("backEnd/backend/src/main/resources/static/img/category_img/" + imageName);
+        Path path = Paths.get("backEnd/backend/target/classes/static/img/category_img/" + imageName);
         Resource resource = new UrlResource(path.toUri());
         return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(resource);
     }
+
+    @GetMapping("/product/{imageName}")
+    public ResponseEntity<Resource> getImageForProduct(@PathVariable String imageName) throws Exception {
+
+        Path path = Paths.get("backEnd/backend/target/classes/static/img/product_img/" + imageName);
+        Resource resource = new UrlResource(path.toUri());
+        return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(resource);
+    }
+
 
     @PostMapping("/savecategory")
     public ResponseEntity<String> saveCategory(@ModelAttribute Category category,
