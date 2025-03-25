@@ -4,7 +4,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.harry.backend.models.Category;
+import com.harry.backend.models.Product;
 import com.harry.backend.service.CategoryService;
+import com.harry.backend.service.ProductService;
 
 import java.io.File;
 import java.io.IOException;
@@ -38,6 +40,8 @@ public class Admin {
     @Autowired
     private CategoryService categoryService;
 
+    @Autowired 
+    private ProductService productService;
 
     //Category Controllers
     @GetMapping("/category")
@@ -148,6 +152,54 @@ public class Admin {
 
     //Product Controllers
 
+    @GetMapping("/product")
+    public ResponseEntity<List<Product>> getAllProduct() {
+        List<Product> productList= productService.getAllProduct();
+
+        return ResponseEntity.ok(productList);
+    }
     
-    
+    @PostMapping("/saveproduct")
+    public ResponseEntity<String> saveProduct(@ModelAttribute Product product,
+            @RequestParam("file") MultipartFile file, @RequestParam("price") String price, @RequestParam("stock") String stock ) throws IOException {
+
+        String imageName = file != null ? file.getOriginalFilename() : "default.jpg";
+        
+        product.setPrice(Double.valueOf(price));
+        product.setStock(Integer.valueOf(stock));
+        product.setImageName(imageName);
+
+
+        Boolean existsProduct= productService.existsProduct(product.getName());
+
+        if (existsProduct) {
+
+            return ResponseEntity.accepted().body("Product Name Already exist");
+        } else {
+            Product saveProduct= productService.saveProduct(product);
+            if (ObjectUtils.isEmpty(saveProduct)) {
+
+                return ResponseEntity.internalServerError().body("Error in save product");
+            } else {
+
+                /* Server side image save just in case. */
+                if (file == null) {
+                    return ResponseEntity.internalServerError().body("file is null.");
+                } else {
+
+                    File saveFile = new ClassPathResource("static/img").getFile();
+                    Path path = Paths.get(saveFile.getAbsolutePath() + File.separator + "product_img" + File.separator
+                            + file.getOriginalFilename());
+
+                    System.out.println(path);
+
+                    Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+                    return ResponseEntity.ok("Saved Successfully ");
+                }
+            }
+
+        }
+
+    }
+
 }
