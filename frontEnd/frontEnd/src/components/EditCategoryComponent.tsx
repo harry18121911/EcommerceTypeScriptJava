@@ -21,21 +21,24 @@ const EditCategoryComponent = () => {
     const { categoryId } = useParams();
 
     useEffect(() => {
-        getCategory()
+        getCategory();
     }, [categoryId]);
 
     function getCategory() {
         axios.get(`http://localhost:8080/categorybyid/${categoryId}`).then((response) => {
-            setCategory(response.data)
+            setCategory(response.data);
+            setName(response.data.name);
+            setIsactive(response.data.isActive)
         }).
-
         catch(error => {
             console.error(error);
         })
     }
-    const defaultFile = new File([], "default");
 
-    const [name, setName] = useState("");
+
+    const defaultFile = new File([], "Old Image");
+
+    const [name, setName] = useState("name");
     const [file, setFile] = useState<File>(defaultFile);
     const [isActive, setIsactive] = useState(false);
 
@@ -43,7 +46,7 @@ const EditCategoryComponent = () => {
 
 
 
-    function saveCategory(e: SyntheticEvent) {
+    function patchCategory(e: SyntheticEvent) {
         e.preventDefault();
         if (typeof file === "undefined") return;
 
@@ -52,7 +55,7 @@ const EditCategoryComponent = () => {
         formData.append("name", name);
         formData.append("file", file);
         formData.append("isActive", isActive.toString());
-        axios.post(`http://localhost:8080/patchcategory/${categoryId}`, formData, {
+        axios.patch(`http://localhost:8080/patchcategory/${categoryId}`, formData, {
             headers: {
                 'Content-Type': 'multipart/form-data'
             },
@@ -77,7 +80,7 @@ const EditCategoryComponent = () => {
     return (
         <>
             <div>
-                <form action="http://localhost:8080/savecategory" method="post" encType="multipart/form-data"  >
+                <form action="http://localhost:8080/patchcategory/{id}" method="patch" encType="multipart/form-data"  >
                     <div>
                         <label>Enter Category</label> <input type="text" name="name" value={name} onChange={({ target }: ChangeEvent<HTMLInputElement>) => setName(target.value)} />
                     </div>
@@ -90,7 +93,7 @@ const EditCategoryComponent = () => {
 
 
                     {/* Leave on onSubmit */}
-                    <button type='submit' onClick={(e) => saveCategory(e)}></button>
+                    <button type='submit' onClick={(e) => patchCategory(e)}>Edit</button>
                 </form>
 
                 <div>
@@ -115,11 +118,10 @@ const EditCategoryComponent = () => {
                         <tr key={category.id}>
                             <td>{category.name}</td>
                             <td>{category.isActive.toString()}</td>
-                            <td><img src={`http://localhost:8080/${category.imageName}`} alt=""></img></td>
+                            <td><img style={{width:500}}src={`http://localhost:8080/${category.imageName}`} alt=""></img></td>
                             <td><img src={`/public/vite.svg`} alt=""></img></td>
                             <td>{category.imageName}</td>
-                            <td>{category.imageName}</td>
-                            <td><button>Edit</button></td>
+                            <td><button>Change Later</button></td>
                             
                         </tr>
 

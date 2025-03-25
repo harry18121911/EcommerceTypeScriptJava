@@ -59,7 +59,7 @@ const ShowCategoryComponent = () => {
                         <tr key={categories.id}>
                             <td>{categories.id}</td>
                             <td>{categories.name}</td>
-                            <td><img src={`http://localhost:8080/${categories.imageName}`} alt=""></img></td>
+                            <td><img style={{width:500}} src={`http://localhost:8080/${categories.imageName}`} alt=""></img></td>
                             <td><img src={`/public/vite.svg`} alt=""></img></td>
                             <td>{categories.imageName}</td>
                             <td><button>Edit</button></td>

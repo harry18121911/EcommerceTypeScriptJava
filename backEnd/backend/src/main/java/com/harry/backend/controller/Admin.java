@@ -114,15 +114,34 @@ public class Admin {
     }
 
     @PatchMapping("/patchcategory/{id}")
-    public ResponseEntity<String >patchCategory(@PathVariable int id, @ModelAttribute Category category) {
+    public ResponseEntity<String >patchCategory(@PathVariable int id, @ModelAttribute Category category, @RequestParam("file") MultipartFile file, @RequestParam("isActive") String isActive) throws IOException {
+        
+        String imageName = file != null ? file.getOriginalFilename() : "default.jpg";
+        
+        Boolean isActiveParse = isActive.contains("true") ? true : false;
 
+        category.setImageName(imageName);
+
+        category.setIsActive(isActiveParse);
         Category patchCategory = categoryService.patchCategory(category);
         
         if(ObjectUtils.isEmpty(patchCategory)){
             return ResponseEntity.internalServerError().body("Error in Patching");
-        }    
-    
-        return ResponseEntity.ok("Category patched successfully.");
+        } else{
+            if (file == null) {
+                return ResponseEntity.internalServerError().body("file is null.");
+            } else {
+
+                File saveFile = new ClassPathResource("static/img").getFile();
+                Path path = Paths.get(saveFile.getAbsolutePath() + File.separator + "category_img" + File.separator
+                        + file.getOriginalFilename());
+
+                System.out.println(path);
+
+                Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+                return ResponseEntity.ok("Saved Successfully ");
+            }
+        }
     }
     
 }
