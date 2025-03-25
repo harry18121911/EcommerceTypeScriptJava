@@ -38,6 +38,8 @@ public class Admin {
     @Autowired
     private CategoryService categoryService;
 
+
+    //Category Controllers
     @GetMapping("/category")
     public ResponseEntity<List<Category>> getAllCategory() {
         List<Category> categoryList = categoryService.getAllCategory();
@@ -143,5 +145,9 @@ public class Admin {
             }
         }
     }
+
+    //Product Controllers
+
+    
     
 }

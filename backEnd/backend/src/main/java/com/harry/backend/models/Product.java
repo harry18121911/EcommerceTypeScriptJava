@@ -14,17 +14,19 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-public class Category {
+public class Product {
 
     @Id
-    @GeneratedValue(strategy =  GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     private String name;
-    
-    private String imageName;
 
-    private Boolean isActive;
+    private String description;
 
-    
+    private Double price;
+
+    private int  stock;
+
+    private String image;
 }
